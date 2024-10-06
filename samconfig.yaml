@@ -1,0 +1,32 @@
+version: 0.1
+
+default:
+  global:
+    parameters:
+      stack_name: aws-sample-python-local-development
+      s3_prefix: aws-sample-python-local-development
+      resolve_s3: false
+      resolve_image_repositories: false
+  build:
+    parameters:
+      cached: true
+      parallel: true
+  deploy:
+    parameters:
+      disable_rollback: true
+      confirm_changeset: false
+      fail_on_empty_changeset: false
+      capabilities:
+        - CAPABILITY_IAM
+        - CAPABILITY_AUTO_EXPAND
+      parameter_overrides:
+        - 'Stage=local'
+  validate:
+    parameters:
+      lint: true
+  local_start_api:
+    parameters:
+      warm_containers: EAGER
+  local_start_lambda:
+    parameters:
+      warm_containers: EAGER

@@ -1,0 +1,30 @@
+[tool.poetry]
+name = "aws-sample-python-local-development"
+version = "0.1.0"
+description = "This project is an AWS Serverless application built using AWS SAM, Python, and Poetry for dependency management. It includes Lambda functions with shared layers and automated local packaging."
+authors = ["Hải Trần Nam <trannamhaibp@gmail.com>"]
+readme = "README.md"
+package-mode = false
+
+[tool.poetry.dependencies]
+python = "^3.12"
+boto3 = "^1.35.34"
+urllib3 = ">=1.25.4,<1.27"
+aws-lambda-powertools = "^3.0.0"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.3.3"
+poetry-plugin-export = "^1.8.0"
+
+[tool.poetry.group.my_lambda.dependencies]
+requests = "^2.32.3"
+
+[tool.poetry.group.another_lambda.dependencies]
+jsonschema = "^4.23.0"
+
+[tool.poetry.group.shared_layer_one.dependencies]
+pandas = "^2.2.3"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

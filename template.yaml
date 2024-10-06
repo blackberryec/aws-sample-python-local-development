@@ -1,0 +1,61 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: 'AWS::Serverless-2016-10-31'
+Description: This project is an AWS Serverless application built using AWS SAM, Python, and Poetry for dependency management. It includes Lambda functions with shared layers and automated local packaging.
+
+Resources:
+  MyLambdaFunction:
+    Type: 'AWS::Serverless::Function'
+    Properties:
+      Handler: handler.handler
+      CodeUri: src/my_lambda/
+      Runtime: python3.12
+      Environment:
+        Variables:
+          MY_ENV_VAR: 'default-value'
+          ANOTHER_ENV_VAR: 'default-another-value'
+      Layers:
+        - !Ref SharedLayerOne
+        - !Ref SharedLayerTwo
+
+  AnotherLambdaFunction:
+    Type: 'AWS::Serverless::Function'
+    Properties:
+      Handler: handler.handler
+      CodeUri: src/another_lambda/
+      Runtime: python3.12
+      Environment:
+        Variables:
+          MY_ENV_VAR: 'default-value'
+      Layers:
+        - !Ref SharedLayerOne
+
+  SharedLayerOne:
+    Type: 'AWS::Lambda::LayerVersion'
+    Properties:
+      LayerName: 'SharedLayerOne'
+      Description: 'Shared utilities for Layer One'
+      Content: layers/shared_layer_one
+      CompatibleRuntimes:
+        - python3.12
+    Metadata:
+      BuildMethod: python3.12
+
+  SharedLayerTwo:
+    Type: 'AWS::Lambda::LayerVersion'
+    Properties:
+      LayerName: 'SharedLayerTwo'
+      Description: 'Shared utilities for Layer Two'
+      Content: layers/shared_layer_two
+      CompatibleRuntimes:
+        - python3.12
+    Metadata:
+      BuildMethod: python3.12
+
+Outputs:
+  MyLambdaFunctionArn:
+    Description: 'ARN of the first Lambda function'
+    Value: !GetAtt MyLambdaFunction.Arn
+
+  AnotherLambdaFunctionArn:
+    Description: 'ARN of the second Lambda function'
+    Value: !GetAtt AnotherLambdaFunction.Arn
