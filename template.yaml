@@ -8,7 +8,7 @@ Resources:
     Properties:
       Handler: handler.handler
       CodeUri: src/my_lambda/
-      Runtime: python3.12
+      Runtime: python3.9
       Environment:
         Variables:
           MY_ENV_VAR: 'default-value'
@@ -22,7 +22,7 @@ Resources:
     Properties:
       Handler: handler.handler
       CodeUri: src/another_lambda/
-      Runtime: python3.12
+      Runtime: python3.9
       Environment:
         Variables:
           MY_ENV_VAR: 'default-value'
@@ -36,9 +36,9 @@ Resources:
       Description: 'Shared utilities for Layer One'
       Content: layers/shared_layer_one
       CompatibleRuntimes:
-        - python3.12
+        - python3.9
     Metadata:
-      BuildMethod: python3.12
+      BuildMethod: python3.9
 
   SharedLayerTwo:
     Type: 'AWS::Lambda::LayerVersion'
@@ -47,9 +47,9 @@ Resources:
       Description: 'Shared utilities for Layer Two'
       Content: layers/shared_layer_two
       CompatibleRuntimes:
-        - python3.12
+        - python3.9
     Metadata:
-      BuildMethod: python3.12
+      BuildMethod: python3.9
 
 Outputs:
   MyLambdaFunctionArn:

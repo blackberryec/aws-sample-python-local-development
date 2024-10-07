@@ -56,14 +56,25 @@ build: deps
 
 # Package the application using SAM package
 .PHONY: package
-package: build
+sam-package: build
 	@echo "Packaging application using sam package..."
 	sam package --s3-bucket $(S3_BUCKET) --output-template-file $(PACKAGED_TEMPLATE)
+
+# Package build artifacts into ZIP files
+.PHONY: package
+package: build
+	@echo "Packaging build artifacts..."
+	mkdir -p $(ARTIFACTS_DIR)
+	@for dir in $(BUILD_DIR)/*/; do \
+		artifact_name=$$(basename $$dir); \
+		echo "Zipping contents of $$artifact_name..."; \
+		(cd $$dir && zip -r $(CURDIR)/$(ARTIFACTS_DIR)/$$artifact_name.zip .); \
+	done
 
 # Run tests using pytest
 .PHONY: test
 test:
-	poetry run pytest tests/
+	PYTHONPATH=layers:$(shell find layers -mindepth 1 -maxdepth 1 -type d | tr '\n' ':')$(PYTHONPATH) poetry run pytest tests/
 
 # Run the application locally using the default environment
 .PHONY: local
@@ -73,7 +84,16 @@ local:
 # Clean build artifacts
 .PHONY: clean
 clean:
-	rm -rf .aws-sam .pytest_cache __pycache__ **/__pycache__ **/**/__pycache__ **/**/requirements.txt .mypy_cache .coverage $(ARTIFACTS_DIR)
+ifeq ($(OS),Windows_NT)
+	# Windows environment (using PowerShell syntax)
+	@if exist .pytest_cache rmdir /s /q .pytest_cache
+	@if exist __pycache__ rmdir /s /q __pycache__
+	@if exist $(ARTIFACTS_DIR) rmdir /s /q $(ARTIFACTS_DIR)
+	@del /s /q **\__pycache__ **\requirements.txt .mypy_cache .coverage
+else
+	# Unix/Linux environment
+	rm -rf .pytest_cache __pycache__ **/__pycache__ **/**/__pycache__ **/**/requirements.txt .mypy_cache .coverage $(ARTIFACTS_DIR)
+endif
 
 # Show help information
 .PHONY: help
@@ -84,7 +104,8 @@ help:
 	@echo "  deps-layers      - Export dependencies for each Layer"
 	@echo "  deps             - Export all dependencies (Lambdas and layers) after cleaning"
 	@echo "  build            - Validate the SAM template and build the application"
-	@echo "  package          - Package the application using SAM package into an S3 bucket"
+	@echo "  sam-package      - Package the application using SAM package into an S3 bucket"
+	@echo "  package          - Package build artifacts into ZIP files"
 	@echo "  test             - Run unit tests using pytest"
 	@echo "  local            - Run the application locally using SAM"
 	@echo "  clean            - Clean up build artifacts and cached files"

@@ -49,7 +49,7 @@ aws-serverless-app/
 
 ## Prerequisites
 
-- Python 3.12
+- Python 3.9
 - Poetry
 - AWS SAM CLI
 - Make
