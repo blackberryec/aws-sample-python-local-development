@@ -265,5 +265,6 @@ $RECYCLE.BIN/
 # Aws SAM
 .aws-sam
 **/**/requirements.txt
+build_artifacts
 
 # End of https://www.toptal.com/developers/gitignore/api/osx,linux,python,windows,visualstudiocode

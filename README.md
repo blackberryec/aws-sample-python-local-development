@@ -78,22 +78,28 @@ aws-serverless-app/
 4. Package the application using SAM package into an S3 bucket:
 
     ```bash
+    make sam-package
+    ```
+    
+5. Package build artifacts into ZIP files:
+
+    ```bash
     make package
     ```
 
-5. Run the application locally:
+6. Run the application locally:
 
     ```bash
     make local
     ```
 
-6. Run tests:
+7. Run tests:
 
     ```bash
     make test
     ```
 
-7. Clean up build artifacts:
+8. Clean up build artifacts:
 
     ```bash
     make clean
